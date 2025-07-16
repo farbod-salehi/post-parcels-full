@@ -1,0 +1,9 @@
+.DS_Store
+/post-parcels-app/node_modules/
+/post-parcels-app/dist/
+
+/PostParcels/.vs/
+/PostParcels/*/bin/
+/PostParcels/*/obj/
+/PostParcels/API/Uploads/
+/PostParcels/API/Migrations/

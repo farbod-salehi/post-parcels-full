@@ -1,0 +1,176 @@
+html,body {
+    margin:0px;
+    padding:0px;
+    font-family: Vazir;
+    direction: rtl;
+    height:100%;
+    background-color: #f7f7f7;
+}
+
+a{
+    text-decoration: none;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    text-align: start;
+}
+
+#header {
+    width:100%; 
+    height:8vh;
+    background-color:#a5bfd5;
+    display: flex;
+    align-items: center; 
+    justify-content: space-between;
+}
+
+#main {
+    flex: 1 0 auto;
+    display: flex;
+}
+
+#footer {
+    width:100%; 
+    padding: 8px 0px;
+    background-color: #a5bfd5; 
+    text-align: center;
+    font-size:0.7em;
+}
+
+#menu-main {
+    border-left: 1px solid rgb(231, 231, 231);
+    text-align: start;
+    display: none;
+    padding: 10px;
+    background: white;
+}
+
+#menu-main a {
+    text-decoration: none;
+    color: #547ea3;
+    font-weight: bold;
+    font-size: 0.95em;
+    display: block;
+}
+
+#menu-main a.disabled {
+    color: rgb(172, 172, 172);
+    cursor: default;
+}
+
+#container-main {
+    flex:1 1 auto;
+    justify-content: center;
+    display: flex;
+}
+
+#content {
+    margin:10px 0px;
+    flex: 0 0 90%; /* set min-width for flex */
+    background: white;
+}
+
+#menu-icon {
+    margin-inline-start:5px;
+}
+
+/*.card-header {
+    background-color: #f5e7bd;
+}*/
+
+.form-group {
+    margin-bottom: 10px;
+}
+
+.ltr {
+    direction: ltr;
+}
+
+.rtl {
+    direction: rtl;
+}
+
+.button-icon {
+    color: #b18708;
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.button-icon.disabled {
+    color: gray;
+    cursor:default;
+}
+
+.form-title-container {
+    font-size: 0.9em; 
+    margin-bottom: 50px; 
+    font-weight: bold;
+}
+
+.input-validation-text {
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+@media screen and (min-width:768px) {
+    #menu-main {
+        flex:0 0 200px; 
+        display: block;
+    }
+
+    #menu-icon {
+        display: none;
+    }
+
+    #content {
+        flex: 0 0 60%; /* set min-width for flex */
+    }
+}
+
+@font-face {				
+    font-family: 'Vazir';  
+    src: url('./../font/Vazir.eot');    
+    src: url('./../font/Vazir.eot?#iefix') format('embedded-opentype');  
+    src: url('./../font/Vazir.woff') format('woff');  
+    src: url('./../font/Vazir.ttf') format('truetype');     
+}
+
+
+/* Bootstrap Customize Settings */
+
+.dropdown-toggle::after {
+    display: inline-block;
+    margin-right: .355em;
+    vertical-align: .030em;
+    content: "";
+    border-top: .3em solid;
+    border-left: .3em solid transparent;
+    border-bottom: 0;
+    border-right: .3em solid transparent;
+    font-size: 1.2em;
+}
+
+.nav-link {
+    font-weight: bold;
+}
+
+.form-check-label {
+    margin-top: 3px;
+    font-size: 0.9em;
+    font-weight: bold;
+}
+
+.modal-header {
+    background-color: #a5bfd5;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+
+
+
