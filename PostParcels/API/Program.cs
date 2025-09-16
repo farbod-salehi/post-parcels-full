@@ -1,28 +1,29 @@
-﻿using Entities;
+﻿using API.Helpers;
+using Azure.Core;
+using Entities;
 using Entities.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using API.Helpers;
-using Azure.Core;
 using Microsoft.Net.Http.Headers;
 using Repository;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
-using System.IO;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Formats.Jpeg;
-using Microsoft.Extensions.FileProviders;
+using SixLabors.ImageSharp.Formats.Png;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.IO;
+using System.IO.Pipes;
+using System.Linq;
+using System.Security.Claims;
+using System.Text;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -709,21 +710,23 @@ app.MapPost("/api/parcels/{id}/documents/add", async ([FromServices] IHttpContex
         return Results.Json(new { userRequestAccessResult.Error, userRequestAccessResult.Act }, statusCode: userRequestAccessResult.StatusCode);
     }
 
-    IFormFile? image = request.Form.Files["image"];
+    IFormFile? doc = request.Form.Files["image"];
 
-    if(image == null)
+    if(doc == null)
     {
-        return Results.BadRequest(new {Error = "فایل تصویر دریافت نشد."});
+        return Results.BadRequest(new {Error = "فایلی دریافت نشد."});
     }
 
-    string? extension = Path.GetExtension(image.FileName);
+    string? extension = Path.GetExtension(doc.FileName)?.ToLower();
 
-    if (extension == null || Constances.GetImagesValidExtensions().Contains(extension.ToLower()) == false)
+    if (extension == null || 
+            (Constances.GetImagesValidExtensions().Contains(extension) == false && Constances.GetDocumentValidExtensions().Contains(extension) == false))
     {
         return Results.BadRequest(new { Error = "فرمت فایل ارسالی صحیح نمی‌باشد." });
     }
+        
 
-    if (image.Length > 1024 * 1024) // Max: 1 MB
+    if (doc.Length > 1024 * 1024) // Max: 1 MB
     {
         return Results.BadRequest(new { Error = "حداکثر حجم مجاز فایل ۱ مگابایت است." });
     }
@@ -735,8 +738,10 @@ app.MapPost("/api/parcels/{id}/documents/add", async ([FromServices] IHttpContex
         return Results.UnprocessableEntity(new { Error = "داده موردنظر یافت نشد." });
     }
 
-    string imageName = $"{Path.GetRandomFileName()}.jpg";
-    
+    bool isImage = Constances.GetImagesValidExtensions().Contains(extension);
+
+    string docName = $"{Path.GetRandomFileName()}{(isImage ? ".jpg" : extension)}";
+
     var directoryPath = $"{environment.ContentRootPath}\\Uploads\\Parcels\\{id}";
 
     if (Directory.Exists(directoryPath) == false)
@@ -744,12 +749,19 @@ app.MapPost("/api/parcels/{id}/documents/add", async ([FromServices] IHttpContex
         Directory.CreateDirectory(directoryPath);
     }
 
-    string imagePath = directoryPath + "\\" + imageName;
+    string docPath = directoryPath + "\\" + docName;
 
-    using var imageStream = image.OpenReadStream();
-    using var imageLoad = Image.Load(imageStream);
-
-    imageLoad.Save(imagePath, new JpegEncoder { Quality = 85 });
+    if(isImage)
+    {
+        using var stream = doc.OpenReadStream();
+        using var imageLoad = Image.Load(stream);
+        imageLoad.Save(docPath, new JpegEncoder { Quality = 85 });
+    }
+    else
+    {
+        using var fileStream = new FileStream(docPath, FileMode.Create);
+        await doc.CopyToAsync(fileStream);
+    }
 
     string userId = tokenManager.GetUserIdFromTokenClaims(httpContextAccessor.HttpContext!)!;
 
@@ -758,7 +770,7 @@ app.MapPost("/api/parcels/{id}/documents/add", async ([FromServices] IHttpContex
     {
         CreatedAt = DateTime.UtcNow,
         CreatedBy = userId,
-        FileName = imageName,
+        FileName = docName,
         ParcelId = id,
     };
 
@@ -766,7 +778,7 @@ app.MapPost("/api/parcels/{id}/documents/add", async ([FromServices] IHttpContex
 
     await repositoryManager.SaveAsync();
 
-    return Results.Ok(new { Path = $"Uploads/Parcels/{id}/{imageName}", parcelDocument.Id });
+    return Results.Ok(new { Path = $"Uploads/Parcels/{id}/{docName}", parcelDocument.Id });
 
 });
 

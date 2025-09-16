@@ -96,11 +96,12 @@
                     packetItems.forEach((packetItem, index) => {
                         packetRows += `<tr> 
                                             <td> ${index + 1} </td> 
-                                            <td style="direction:ltr"> ${packetItem.code} </td> 
+                                            <td style="direction:ltr; width:30%"> ${packetItem.code} </td> 
                                             <td> ${packetItem.typeFa} </td> 
                                             <td> ${packetItem.description} </td>
-                                            <td> ${packetItem.senderTitle} </td> 
-                                            <td> ${packetItem.receiverTitle} </td>  
+                                            <td > ${packetItem.senderTitle} </td> 
+                                            <td style="width:15%"> </td>
+                                            <!-- <td> ${packetItem.receiverTitle} </td> -->
                                        </tr>`;
                     });
                     
@@ -133,7 +134,7 @@
                                                 فرستنده
                                             </td>
                                             <td>
-                                                گیرنده
+                                                ملاحظات
                                             </td>
                                         </tr>
                                      </thead> 

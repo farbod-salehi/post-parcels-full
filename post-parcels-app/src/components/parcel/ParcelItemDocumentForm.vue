@@ -28,12 +28,16 @@
       ></button>
     </div>
     <div v-if="imageIsSelected" style="text-align: center;">
-      
-        <div style="margin-bottom:40px"> <img class="doc" :src="state.preview" /> </div>
+        
+        <div style="margin-bottom:40px"> 
+            <b-icon-filetype-pdf v-if="state.isPDF"  style="font-size: 3em;" />
+            <img v-else class="doc" :src="state.preview"  />           
+            
+        </div>
        <p>
-        <button @click="submitFile"  class="btn btn-success btn-sm">ارسال این تصویر </button>
+        <button @click="submitFile"  class="btn btn-success btn-sm">ارسال این فایل </button>
         &nbsp; &nbsp;
-        <button  @click="cancelSelectedFile"  class="btn btn-danger btn-sm">لغو انتخاب تصویر</button>
+        <button  @click="cancelSelectedFile"  class="btn btn-danger btn-sm">لغو انتخاب فایل</button>
        </p>
     
         
@@ -46,14 +50,15 @@
         </div>
         <div v-else style="text-align:center">
             <div style="text-align: right; margin-bottom:50px">
-                <input id="fileUploadInput" accept="image/*" type="file" @change ="onFileChanged($event)" ref="state.image" style="display: none;">
-                <button @click="openInputFile" class="btn btn-primary btn-sm">انتخاب تصویر جدید</button>
+                <input id="fileUploadInput" accept="image/jpeg,image/png,application/pdf" type="file" @change ="onFileChanged($event)" ref="state.image" style="display: none;">
+                <button @click="openInputFile" class="btn btn-primary btn-sm">انتخاب فایل جدید</button>
             </div>
             <div v-for="item of docsList" :key="item.id" style="margin-bottom: 90px;">
                 <div>
-                    <img class="doc" :src="item.path" />                    
+                    <a v-if="item.isPDF" :href="item.path" target="_blank"> <b-icon-filetype-pdf  style="font-size: 4em;" /> </a>  
+                    <img v-else class="doc" :src="item.path" />                    
                 </div>
-                <button @click="setIdForDelete(item.id)" class="btn btn-danger btn-sm" style="margin-top:10px; position:absolute; right:100px;" data-bs-toggle="modal" data-bs-target="#confirmModal"> <b-icon-trash-fill  />  حذف تصویر </button>
+                <button @click="setIdForDelete(item.id)" class="btn btn-danger btn-sm" style="margin-top:10px; position:absolute; right:100px;" data-bs-toggle="modal" data-bs-target="#confirmModal"> <b-icon-trash-fill  />  حذف فایل </button>
               
                 
             </div>
@@ -69,13 +74,13 @@
               <div class=" modal-dialog modal-dialog-centered modal-dialog-scrollable">
                   <div class="modal-content">
                       <div class="modal-header">
-                          <h4 class="modal-title fs-5" id="signoutModalLabel"> حذف تصویر</h4>
+                          <h4 class="modal-title fs-5" id="signoutModalLabel"> حذف فایل</h4>
                           <button  type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeSignoutModal">
                 
                           </button>
                       </div>
                       <div class="modal-body">
-                         آیا از حذف این تصویر اطمینان دارید؟
+                         آیا از حذف این فایل اطمینان دارید؟
                       </div>
                       <div class="modal-footer">
                               <button class="btn btn-danger btn-sm" data-bs-dismiss="modal">
@@ -117,6 +122,7 @@
             const state = reactive({
                 image: File,
                 preview: File,
+                isPDF: Boolean
             });
 
             onMounted(async () => {
@@ -139,9 +145,11 @@
                     parcelCode.value = result.parcelCode;
                     if (result.list && result.list.length > 0) {
                         result.list.forEach((element) => {
+                            const lastPartOfPath = element.path.split(/[\\/]/).pop();
                             docsList.value.push({
                                 id: element.id,
                                 path: `${baseAPI}/${element.path}`,
+                                isPDF: String(lastPartOfPath.slice(lastPartOfPath.lastIndexOf(".") + 1)) === 'pdf'
                             });
                         });
                     
@@ -158,6 +166,7 @@
             function onFileChanged(event) {
                 const target = event.target;
                 if (target && target.files) {
+                    this.state.isPDF = target.files[0].name.split('.')[1].toLowerCase() === 'pdf';
                     this.state.image = target.files[0];
                     this.state.preview = URL.createObjectURL(target.files[0]);
                     this.imageIsSelected = true;

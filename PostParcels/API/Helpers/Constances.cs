@@ -46,11 +46,16 @@ public class Constances
 
     }
 
-    public static List<string> GetImagesValidExtensions()
+    public static string[] GetImagesValidExtensions()
     {
         return [".jpg", ".jpeg", ".png"];
     }
-   
+
+    public static string[] GetDocumentValidExtensions()
+    {
+        return [".pdf"];
+    }
+
     public static int UserPasswordMinLength { get { return 6; } }
 
     public static string DevelopmentConnectionString
