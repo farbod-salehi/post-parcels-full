@@ -1,30 +1,6 @@
 @API_HostAddress = https://localhost:7018
 
-GET {{API_HostAddress}}/hello
+GET {{API_HostAddress}}/test
 Accept: application/json
-
-###
-
-
-POST {{API_HostAddress}}/api/users/add/
-Content-Type: application/json
-#Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImRmZTdmMmY1LTFhOGMtNGE5Zi04ODJmLTBlYTFkYjlmMDFhMSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6InVzZXIiLCJleHAiOjE3NTEwMTY4OTIsImlzcyI6IlBvc3RQYXJjZWxBUEkiLCJhdWQiOiJQb3N0UGFyY2VsQXBwIn0.KZgiQx50oDpC12bJnFfS2Cg5K8QxbpjHNapj1ZC83do
-
-{
-    "username":"admin",
-    "password":"asdfasdf",
-    "title":"admin",
-    "role":"1"
-}
-
-###
-
-POST {{API_HostAddress}}/api/login/
-Content-Type: application/json
-
-{
-    "username":"user",
-    "password":"asdfasdf"
-}
 
 ###
