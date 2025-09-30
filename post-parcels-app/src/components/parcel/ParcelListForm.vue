@@ -132,7 +132,7 @@ export default {
 
         let initLoading = ref(false);
         let parcelsList = ref([]);
-        const grid_page_size = 10;
+        const grid_page_size = 20;
         let grid_pages_count = ref(1);
         let grid_current_page = ref(1);
         let searchQuery = ref('');

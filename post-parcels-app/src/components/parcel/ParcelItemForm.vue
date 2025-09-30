@@ -9,6 +9,8 @@
         <span v-else> ثبت پکیج جدید </span>
       </div>
       <div>
+        <span v-if="editId">  <router-link :to="{ name: 'parcelItemDocuments', params: { editId: editId } }"> مستندات </router-link> &nbsp; </span>
+       
         <router-link :to="{ name: 'parcelList' }"> فهرست پکیج‌ها </router-link>
       </div>
     </div>
@@ -867,12 +869,12 @@ export default {
           store.getters.getAuthInfo?.userToken
         );
 
-        resetForm();
+        //resetForm();
           showToast(
             "success",
             `ویرایش پکیج با کد ${editParcelCode.value} با موفقیت انجام شد.`
           );
-          router.replace({ name: "parcelList" });
+          //router.replace({ name: "parcelList" });
 
       } catch (error) {
         messages.value = requestErrorHandling(error, router);

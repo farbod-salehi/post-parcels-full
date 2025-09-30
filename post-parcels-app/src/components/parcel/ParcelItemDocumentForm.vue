@@ -3,13 +3,15 @@
         <div class="d-flex justify-content-between">
         <div>
             <span>
-            مستندات بسته
+            مستندات پکیج
             <span v-if="parcelCode" class="ltr"> {{ parcelCode }} </span>
             </span>
         
         </div>
         <div>
-            <router-link :to="{ name: 'parcelList' }"> فهرست بسته‌ها </router-link>
+             <router-link :to="{ name: 'parcelItem', params: { editId: editId } }"> ویرایش پکیج </router-link>
+             &nbsp;
+            <router-link :to="{ name: 'parcelList' }"> فهرست پکیج‌ها </router-link>
         </div>
         </div>
     </div>
