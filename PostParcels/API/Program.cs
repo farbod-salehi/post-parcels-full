@@ -546,7 +546,7 @@ app.MapPost("/api/parcels/add", async ([FromServices] IHttpContextAccessor httpC
 
     await repositoryManager.SaveAsync();
 
-    return Results.Created($"/api/parcels/{newParcel.Id}", new { ParcelCode = parcelCode, ItemsCount = request.Count });
+    return Results.Created($"/api/parcels/{newParcel.Id}", new { ParcelCode = parcelCode, ItemsCount = request.Count, newParcel.Id });
 
 });
 

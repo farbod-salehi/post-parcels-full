@@ -118,7 +118,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import { sendRequest, requestErrorHandling, baseAPI } from './../../utility';
+import { sendRequest, requestErrorHandling, openParcelsReport } from './../../utility';
 
 export default {
     name: 'ParcelListForm',
@@ -164,8 +164,7 @@ export default {
         }
 
         function openReport(parcelId) {
-            const url = new URL(location.origin + `/reports/parcelpackets.html?requestAPI=${baseAPI}/api/parcels/${parcelId}`);
-            window.open(url.toString(), '_blank');
+            openParcelsReport(parcelId);
         }
 
 

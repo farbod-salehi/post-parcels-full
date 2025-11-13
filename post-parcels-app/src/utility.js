@@ -86,3 +86,11 @@ export function getRoutePath(router, routeName, routeParamsObject) {
 
   return result.href;
 }
+
+export function openParcelsReport(parcelId) {
+  const url = new URL(
+    location.origin +
+      `/reports/parcelpackets.html?requestAPI=${baseAPI}/api/parcels/${parcelId}`
+  );
+  window.open(url.toString(), "_blank");
+}

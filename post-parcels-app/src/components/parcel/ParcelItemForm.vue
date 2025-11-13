@@ -10,6 +10,9 @@
       </div>
       <div>
         <span v-if="editId">  <router-link :to="{ name: 'parcelItemDocuments', params: { editId: editId } }"> مستندات </router-link> &nbsp; </span>
+        <span v-if="editId">   <a href="#" @click="openReport(editId)">       چاپ  </a> &nbsp; </span>
+                      
+                      
        
         <router-link :to="{ name: 'parcelList' }"> فهرست پکیج‌ها </router-link>
       </div>
@@ -575,7 +578,7 @@ import { useRouter } from "vue-router";
 import { useStore } from "vuex";
 import { useVuelidate } from "@vuelidate/core";
 import { required } from "@vuelidate/validators";
-import { sendRequest, showToast, requestErrorHandling } from "./../../utility";
+import { sendRequest, showToast, requestErrorHandling, openParcelsReport } from "./../../utility";
 
 export default {
   name: "ParcelItemForm",
@@ -635,26 +638,18 @@ export default {
       },
       selectedSender: {
         required,
-        /*requiredIf: () => 
-          !state.selectedSender && state.senderSelectionMode === true,*/
       },
       undefinedSender: {
         required,
-        /*requiredIf: () =>
-          (!state.undefinedSender || state.undefinedSender.length === 0) && state.senderSelectionMode === false,*/
       },
       selectedReceiver: {
         required,
-        /*requiredIf: () =>
-          (!state.selectedReceiver && !state.undefinedReceiver),*/
       },
       undefinedReceiver: {
         required,
       },
       parcelItemCode: {
         required,
-        /*requiredIf: () =>
-          !parcelItems.value.find((x) => x.code === state.parcelItemCode),*/
       },
     }));
 
@@ -673,17 +668,13 @@ export default {
      
       window.addEventListener('scroll', () => {
         let distanceFromBottom = document.documentElement.scrollHeight - window.innerHeight - window.scrollY;
-       
-        if (distanceFromBottom > 80) {
-          //document.getElementById("btn-main").style.display = "none";
+  
+        if (distanceFromBottom > 80) {        
           document.getElementById("btn-main").style.position = "fixed";
           document.getElementById("btn-main").style.right = "10px";
           document.getElementById("btn-main").style.bottom = "120px";
-          //document.getElementById("btn-main").style.display = "block";        
-        } else {
-          //document.getElementById("btn-main").style.display = "none";
+        } else {       
           document.getElementById("btn-main").style.position = "static";
-          //document.getElementById("btn-main").style.display = "inline";
         }
       });
     });
@@ -849,8 +840,8 @@ export default {
           params,
           store.getters.getAuthInfo?.userToken
         );
-
-        resetForm();
+       
+        router.replace({ name: "parcelItem", params:{ editId: result.id }});
         showToast("success",`پکیج با کد ${result.parcelCode} با ${result.itemsCount} عدد بسته با موفقیت ثبت شد.`);
 
       } catch (error) {
@@ -869,12 +860,12 @@ export default {
           store.getters.getAuthInfo?.userToken
         );
 
-        //resetForm();
-          showToast(
-            "success",
-            `ویرایش پکیج با کد ${editParcelCode.value} با موفقیت انجام شد.`
-          );
-          //router.replace({ name: "parcelList" });
+        
+        showToast(
+          "success",
+          `ویرایش پکیج با کد ${editParcelCode.value} با موفقیت انجام شد.`
+        );
+          
 
       } catch (error) {
         messages.value = requestErrorHandling(error, router);
@@ -969,7 +960,7 @@ export default {
       messages.value = [];
     }
 
-    function resetForm() {
+    /*function resetForm() {
       clearMessages();
 
       state.selectedPacketNumber = packets.value[0].code;
@@ -983,10 +974,14 @@ export default {
 
       packets.value = [{ code: 1, name: selectedPacketTitle }];
       parcelItems.value = [];
-    }
+    }*/
 
     function openConfirmModal(code) {
       confirmModalData.selectedPacket = code;
+    }
+
+    function openReport(parcelId) {
+      openParcelsReport(parcelId);
     }
 
     const selectedPacketTitle = computed(() => {
@@ -1021,6 +1016,7 @@ export default {
       addToPacket,
       removeFromPacket,
       editParcelCode,
+      openReport
     };
   },
 };
