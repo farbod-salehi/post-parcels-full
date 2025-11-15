@@ -134,7 +134,7 @@
 
       store.commit('tryLogin');
       
-      let version = "2.5";
+      let version = "2.7";
 
       if(store.getters.userIsAuthenticated === false) {
         clearAuthInfo();

@@ -15,7 +15,7 @@ namespace Repository
         public async Task<(List<Parcel> list, int count)> GetList(bool trackChanges, string? query = null, int page = 1, int count = 10, Func<IQueryable<Parcel>, IIncludableQueryable<Parcel, object?>>? includes = null)
         {
             var queryable= Find(trackChanges, 
-                x => (query == null || x.Code.Contains(query) || x.ParcelItems!.Any(y=>y.Code == query)) && x.DeletedAt == null,
+                x => (query == null || x.Code.Contains(query) || x.ParcelItems!.Where(x=>x.DeletedAt == null).Any(y=>y.Code == query)) && x.DeletedAt == null,
                 null, 
                 x => x.OrderByDescending(y=>y.CreatedAt));
 

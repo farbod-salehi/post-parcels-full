@@ -840,8 +840,11 @@ export default {
           params,
           store.getters.getAuthInfo?.userToken
         );
-       
-        router.replace({ name: "parcelItem", params:{ editId: result.id }});
+        
+        editParcelCode.value = result.parcelCode;
+        editId.value = result.id;
+
+        router.replace({ name: "parcelItem", params:{ editId: editId.value }});
         showToast("success",`پکیج با کد ${result.parcelCode} با ${result.itemsCount} عدد بسته با موفقیت ثبت شد.`);
 
       } catch (error) {
