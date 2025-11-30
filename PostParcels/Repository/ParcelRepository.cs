@@ -16,7 +16,7 @@ namespace Repository
         {
             var queryable= Find(trackChanges, 
                 x => (query == null || x.Code.Contains(query) || x.ParcelItems!.Where(x=>x.DeletedAt == null).Any(y=>y.Code == query)) && x.DeletedAt == null,
-                null, 
+                x=>x.Include(y=>y.ParcelDocuments), 
                 x => x.OrderByDescending(y=>y.CreatedAt));
 
             var itemsCount = queryable.Count();

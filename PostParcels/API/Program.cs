@@ -416,6 +416,7 @@ app.MapGet("/api/parcels",async ([FromServices] IHttpContextAccessor httpContext
         {
             x.Id,
             x.Code,
+            DocsCount = x.ParcelDocuments?.Where(x=>x.DeletedAt == null).Count() ?? 0,
             ItemsCount = x.ParcelItems?.Where(x=>x.DeletedAt == null).Count() ?? 0,
             CreatedAt = x.CreatedAt != null ? new PersianDateTime((DateTime)x.CreatedAt!).GetShortDateTime() : default,
         }),

@@ -75,7 +75,10 @@
                         &nbsp;
                         <router-link
                             :to="{ name: 'parcelItemDocuments',params: { editId: parcel.id } }">
-                            مستندات
+                            <span :style="{ color: parcel.docsCount > 0 ? '' : '#db1919' }"> 
+                                  مستندات
+                            </span>
+                           
                         </router-link>
                         &nbsp;
                         |

@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    
+
     <title> مرسوله‌های بسته</title>
     <style>
         body {
@@ -14,14 +14,14 @@
             font-family: Vazir;
             direction: rtl;
         }
-    
+
         table,
         th,
         td {
             border: 1px solid black;
             border-collapse: collapse;
         }
-    
+
         thead {
             font-weight: bold;
         }
@@ -29,13 +29,21 @@
         tbody {
             font-size: 0.8em;
         }
-    
+
         @font-face {
             font-family: 'Vazir';
             src: url('fonts/Vazir.eot');
             src: url('fonts/Vazir.eot?#iefix') format('embedded-opentype');
             src: url('fonts/Vazir.woff') format('woff');
             src: url('fonts/Vazir.ttf') format('truetype');
+        }
+
+        @media print {
+            .unit {
+                break-inside: avoid;       /* modern*/
+                page-break-inside: avoid;  /* legacy*/
+            }
+
         }
     </style>
     <script>
@@ -70,27 +78,27 @@
                 }
             })
             .then(function (result) {
-                 document.querySelector('#parcel-code').innerHTML = result.code;
-                 const packets = [];
-                 result.list.sort((a, b) => (a.packetNumber - b.packetNumber)).forEach(element => {
-                    if(packets.includes(element.packetNumber) === false) {
+                document.querySelector('#parcel-code').innerHTML = result.code;
+                const packets = [];
+                result.list.sort((a, b) => (a.packetNumber - b.packetNumber)).forEach(element => {
+                    if (packets.includes(element.packetNumber) === false) {
                         packets.push(element.packetNumber);
                     }
                     items.push({
                         packetNumber: element.packetNumber,
                         code: element.code,
-                        description: element.description ?? "---" ,
+                        description: element.description ?? "---",
                         senderTitle: element.undefinedSenderTitle === null ? element.senderTitle : element.undefinedSenderTitle,
                         receiverTitle: element.undefinedReceiverTitle === null ? element.receiverTitle : element.undefinedReceiverTitle,
                         typeFa: element.typeName,
 
                     });
                     document.querySelector('#packet-count').innerHTML = packets.length;
-                 });
-                
-                 let output = '';
-                 packets.forEach(packNumber => {
-                    const packetItems = items.filter(x=>x.packetNumber === packNumber);
+                });
+
+                let output = '';
+                packets.forEach(packNumber => {
+                    const packetItems = items.filter(x => x.packetNumber === packNumber);
                     let packetRows = '';
                     let firstReceiver = packetItems.length > 0 ? packetItems[0].receiverTitle : "";
                     packetItems.forEach((packetItem, index) => {
@@ -104,8 +112,10 @@
                                             <!-- <td> ${packetItem.receiverTitle} </td> -->
                                        </tr>`;
                     });
-                    
-                    output += ` <div style="margin: 20px auto 0px auto; width: 95%; text-align: right; font-weight:bold">  
+
+                    output += ` 
+                           <div class="unit"> 
+				               <div style="margin: 20px auto 0px auto; width: 95%; text-align: right; font-weight:bold">  
                                         بسته شماره
                                         ${packNumber} 
                                         &nbsp;
@@ -143,21 +153,22 @@
                                      </tbody>
                                 </table>
                                 <div style="border-bottom:3px dashed gray; width:95%; margin:20px auto 0px auto;">  </div>
-                                `;
-                 });
+				            </div>
+                            `;
+                });
 
-               
-                 document.querySelector('#content').innerHTML = output;
 
-                 window.print();
+                document.querySelector('#content').innerHTML = output;
+
+                window.print();
             })
             .catch(function (error) {
                 console.log(error);
             });
 
-            
+
     </script>
-    
+
 </head>
 
 <body>
@@ -165,8 +176,8 @@
         لطفا جاوااسکریپت را روی مرورگر فعال کنید.
     </noscript>
     <div style="text-align: center; padding: 30px 0px; font-weight: bold; font-size: 20px;">
-         پکیج 
-       
+        پکیج
+
         <span id="parcel-code"></span>
     </div>
     <div style="text-align:left; width: 96%; color: gray; font-size: 0.85em; font-weight: bold;">
@@ -179,5 +190,3 @@
 </body>
 
 </html>
-
-
